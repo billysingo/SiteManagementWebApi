@@ -18,8 +18,8 @@ myApp.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
 
     $scope.addSite = function () {
         console.log($scope.site);
-        if (isNaN($scope.site.latitude) || isNaN($scope.site.longitude)) {
-            alert('Error');
+        if ( !$scope.site || isNaN($scope.site.latitude) || isNaN($scope.site.longitude)) {
+            alert('填写站点名和经纬度');
             refresh();
         } else {
             $http.post('/sitelist', $scope.site).then(function (response) {
@@ -80,7 +80,7 @@ myApp.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
     }
 
     $scope.addNewAttribute = function () {
-        if (!isNaN($scope.newAttrName) || ($scope.newAttrName in $scope.site)){
+        if (!isNaN($scope.newAttrName) || ($scope.newAttrName in $scope.site) || !$scope.newAttrName){
             alert('参数名无效');
             $scope.newAttrName = '';
         }
@@ -98,5 +98,27 @@ myApp.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
 }]);
 
 myApp.controller('MessageCtrl',['$scope', '$http',function ($scope, $http) {
-    
+
+    var refresh = function () {
+        $http.get('/message').then(function (response) {
+            $scope.messages = response.data;
+        });
+    };
+
+    refresh();
+
+    $scope.addMsg = function () {
+        if ($scope.name!="" && $scope.msg!="" &&$scope.name &&$scope.msg){
+            $http.post('/message',{name:$scope.name, msg:$scope.msg}).then(function (response) {
+                $scope.name = '';
+                $scope.msg = '';
+            });
+            refresh();
+        }else{
+            alert('填写名字')
+        }
+       
+    };
+
+
 }]);

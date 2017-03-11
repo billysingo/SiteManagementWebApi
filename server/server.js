@@ -2,13 +2,14 @@ var express = require('express');
 var app = express();
 var mongojs = require('mongojs');
 var db = mongojs('sites', ['sites']);
+var dbmsg = mongojs('message', ['message']);
 var bodyParser = require('body-parser');
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
 app.get('/sitelist', function (req, res) {
-    console.log('i received a request');
+    //console.log('i received a request');
     db.sites.find(function (err, docs) {
         console.log(docs);
         res.json(docs);
@@ -31,7 +32,7 @@ app.get('/sitelist', function (req, res) {
 // });
 
 app.post('/sitelist', function (req, res) {
-    console.log(req.body);
+    //console.log(req.body);
     db.sites.insert(req.body, function (err, doc) {
         res.json(doc);
     });
@@ -53,7 +54,7 @@ app.post('/sitelist', function (req, res) {
 
 app.delete('/sitelist/:id', function (req, res) {
     var id = req.params.id;
-    console.log(id);
+    //console.log(id);
     db.sites.remove({_id: mongojs.ObjectID(id)}, function (err, doc) {
         res.json(doc);
     })
@@ -96,9 +97,29 @@ app.put('/sitelist/:id', function (req, res) {
     }, function (err, doc) {
         res.json(doc);
     });
-
-
 });
+
+app.get('/message', function (req, res) {
+    console.log('get msg');
+    dbmsg.message.find(function (err, doc) {
+        if (!err){
+            res.json(doc);
+        }
+    })
+});
+
+app.post('/message',function (req, res) {
+    var newMsg = {
+        name: req.body.name,
+        msg: req.body.msg,
+        time: Date()
+    };
+    console.log('new message got:'+newMsg.msg);
+    dbmsg.message.insert(newMsg, function (err, doc) {
+        res.json(doc);
+    });
+});
+
 
 
 app.listen(3000);
