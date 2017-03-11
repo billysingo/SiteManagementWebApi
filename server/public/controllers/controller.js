@@ -2,10 +2,14 @@ var myApp = angular.module('myApp', []);
 myApp.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
     console.log('from the controller');
     $scope.isEditing = false;
+    $scope.isInfo = false;
+    $scope.detailEditing = {}
+
     var refresh = function () {
         $http.get('/sitelist').then(function (response) {
             console.log('i got the data', response);
             $scope.sites = response.data;
+            if (!$scope.isInfo)
             $scope.site = undefined;
         });
     };
@@ -42,6 +46,9 @@ myApp.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
 
     $scope.update = function () {
         console.log($scope.site._id);
+        for (item in $scope.detailEditing){
+            $scope.detailEditing[item] = false;
+        }
         if (isNaN($scope.site.latitude) || isNaN($scope.site.longitude)) {
             alert('Error');
             refresh();
@@ -53,8 +60,43 @@ myApp.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
         }
     };
 
+    $scope.info = function (id) {
+        console.log('inDetialMode');
+        $http.get('/sitelist/' + id).then(function (response) {
+            $scope.site = response.data;
+            $scope.isInfo = true;
+        })
+    }
+
+
     $scope.deselect = function () {
         $scope.site = undefined;
         $scope.isEditing = false;
     }
+
+    $scope.returnToHome = function () {
+        $scope.isInfo = false;
+        $scope.site = undefined;
+    }
+
+    $scope.addNewAttribute = function () {
+        if (!isNaN($scope.newAttrName) || ($scope.newAttrName in $scope.site)){
+            alert('参数名无效');
+            $scope.newAttrName = '';
+        }
+        else{
+        $scope.site[$scope.newAttrName] = $scope.newAttrValue;
+        $scope.newAttrName = '';
+        $scope.newAttrValue = '';
+       }
+    }
+
+    $scope.delAttribute = function (name) {
+            delete $scope.site[name];
+    }
+
+}]);
+
+myApp.controller('MessageCtrl',['$scope', '$http',function ($scope, $http) {
+    
 }]);
