@@ -1,5 +1,5 @@
 <!DOCTYPE>
-<html ng-app="myApp">
+<html ng-app="myApp" ng-controller="AppCtrl">
 <head>
     <title>Site List App</title>
     <meta charset="utf-8">
@@ -14,33 +14,41 @@
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 </head>
 <body>
-<div class="container" ng-controller="AppCtrl">
+<div class="container" >
 
 
-    <h1>台站地址管理 <small>via csbsb</small></h1>
+    <h1>台站信息管理
+        <small>via csbsb</small>
+    </h1>
+
     <table class="table table-striped" ng-show="!isInfo">
         <thead>
         <tr>
-            <th>站名</th>
-            <th>纬度</th>
-            <th>经度</th>
-            <th>选项</th>
+            <th >站名</th>
+            <th >纬度</th>
+            <th >经度</th>
+            <th >选项</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td><input class="form-control" ng-model="site.name" required=""></td>
-            <td><input class="form-control" ng-model="site.latitude" required=""></td>
-            <td><input class="form-control" ng-model="site.longitude" required=""></td>
+        
+        <tr ng-show="isEditing">
+            <td><input class="form-control" ng-model="site.name" ></td>
+            <td><input class="form-control" ng-model="site.latitude" ></td>
+            <td><input class="form-control" ng-model="site.longitude" ></td>
             <td>
-                <button ng-show="!isEditing" class="btn btn-primary" ng-click="addSite()">添加</button>
-                <button ng-show="isEditing" class="btn btn-info" ng-click="update()">更新</button>
-                <button ng-show="isEditing" class="btn btn-info" ng-click="deselect()">取消</button>
-
+                <button ng-show="isEditing" class="btn btn-primary" ng-click="addSite()">添加</button>
+                <!-- <button ng-show="!isEditing" class="btn btn-info" ng-click="update()">更新</button> -->
+                <button ng-show="isEditing" class="btn btn-info" ng-click="isEditing=!isEditing">取消</button>
             </td>
         </tr>
-        <tr ng-repeat="site in sites">
-            <td ng-bind="site.name"></td>
+        <tr>
+            <td width="25%"><input type="text"  class="form-control" ng-model="filterName" placeholder="筛选站名"></td>
+            <td width="25%"></td><td width="25%"></td>
+            <td width="25%"><button ng-show="!isEditing" class="btn btn-primary" ng-click="isEditing=!isEditing">添加</button></td>
+        </tr>
+        <tr ng-repeat="site in sites | filter: {name:filterName}">
+            <td nowrap="" overflow:hidden ng-bind="site.name"></td>
             <td ng-bind="site.latitude"></td>
             <td ng-bind="site.longitude"></td>
             <td>
@@ -52,47 +60,54 @@
         </tr>
         </tbody>
     </table>
-
     <table class="table table-striped" ng-show="isInfo">
         <thead>
-            <tr>
-                <th >参数</th>
-                <th >值 </th>
-                <th width="30%">控制</th>
-            </tr>
+        <tr>
+            <th>参数</th>
+            <th>值</th>
+            <th >控制</th>
+        </tr>
         </thead>
         <tbody>
-            <tr>
-                <td><input class="form-control" ng-model="newAttrName" placeholder="不得纯数字或重复" required=""></td>
-                <td><input class="form-control" ng-model="newAttrValue" required=""></td>
-                <td><button class="btn btn-primary" ng-click="addNewAttribute()">新增</button></td>
-            </tr>
-            <tr ng-repeat="(attribute,value) in site" ng-show="(attribute=='_id')?0:1" ng-init="detailEditing[attribute]=false">
-                <!-- <td>{{translate[attribute]?translate[attribute]:attribute}}</td> -->
-                <td>{{attribute}}</td>
-                <td ng-show="!detailEditing[attribute]">{{value}}</td>
-                <td ng-show="detailEditing[attribute]"><input class="form-control" ng-model="site[attribute]"></td>
-                <td>
-                    <button class="btn btn-warning" ng-click="detailEditing[attribute]=!detailEditing[attribute]" ng-bind="detailEditing[attribute]?'完成 ':'修改'"></button>
-                    <button class="btn btn-danger" ng-click="delAttribute(attribute)">删除</button>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td>
-                    <button class="btn btn-primary" ng-click="returnToHome()">返回</button>
-                    <button class="btn btn-success" ng-click="update()">确认</button>
-                </td>
-            </tr>
+        <tr>
+            <td><input class="form-control" ng-model="newAttrName" placeholder="不得纯数字或重复" required=""></td>
+            <td><input class="form-control" ng-model="newAttrValue" required=""></td>
+            <td>
+                <button class="btn btn-primary" ng-click="addNewAttribute()">新增</button>
+            </td>
+        </tr>
+        <tr  ng-repeat="(attribute,value) in site" ng-show="(attribute=='_id')?0:1"
+            ng-init="detailEditing[attribute]=false">
+            <!-- <td>{{translate[attribute]?translate[attribute]:attribute}}</td> -->
+            <td nowrap="" overflow:hidden >{{attribute}}</td>
+            <td ng-show="!detailEditing[attribute]">{{value}}</td>
+            <td ng-show="detailEditing[attribute]"><input class="form-control" ng-model="site[attribute]"></td>
+            <td>
+                <button class="btn btn-warning" ng-click="detailEditing[attribute]=!detailEditing[attribute]"
+                        ng-bind="detailEditing[attribute]?'完成 ':'修改'"></button>
+                <button class="btn btn-danger" ng-click="delAttribute(attribute)">删除</button>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                <button class="btn btn-primary" ng-click="returnToHome()">返回</button>
+                <button class="btn btn-success" ng-click="update()">确认</button>
+            </td>
+        </tr>
         </tbody>
     </table>
 </div>
 
-<div class="container" ng-controller="MessageCtrl">
-    <div><h3>留言板</h3></div><br>
-    <div  ng-repeat="msg in messages | orderBy: '-time'">
-        <h4><u>{{msg.name}}</u><small>    {{msg.time}}</small></h4>
+<div  class="container" ng-controller="MessageCtrl">
+    <div ng-show="!isInfo" >
+    <div ><h3>留言板</h3></div>
+    <br>
+    <div ng-repeat="msg in messages | orderBy: '-time'">
+        <h4><u>{{msg.name}}</u>
+            <small> {{msg.time}}</small>
+        </h4>
         <blockquote>
             <p ng-bind-html="replaceText(msg.msg)"></p>
         </blockquote>
@@ -100,17 +115,17 @@
     <br>
     <div>
         <form class="form-inline">
-          <div class="form-group">
-            
-              <input type="text" class="form-control" ng-model="name" placeholder="名字" required="">
-          </div>
-          <button type="submit" class="btn btn-primary" ng-click="addMsg()">留言</button>
+            <div class="form-group">
+
+                <input type="text" class="form-control" ng-model="name" placeholder="名字" required="">
+            </div>
+            <button type="submit" class="btn btn-primary" ng-click="addMsg()">留言</button>
         </form>
         <textarea style="resize: none" class="form-control" rows="5" ng-model="msg" placeholder="内容"></textarea>
 
     </div>
     <h4>源代码:<a href="https://github.com/billysingo/SiteManagementWebApi" target="_blank">Github链接</a></h4>
-    
+    </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script>
 <script src="controllers/controller.js"></script>

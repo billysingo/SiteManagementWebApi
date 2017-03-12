@@ -11,14 +11,14 @@ app.use(bodyParser.json());
 app.get('/sitelist', function (req, res) {
     //console.log('i received a request');
     db.sites.find(function (err, docs) {
-        console.log(docs);
+        //console.log(docs);
         res.json(docs);
     })
 });
 
 // app.post('/sitelist/:id', function (req, res) {
 //     var id = req.params.id;
-    
+
 //     var newObj = {};
 //     newObj[req.body.name] = req.body.value;
 //     console.log(newObj + ' : add attr');
@@ -71,25 +71,27 @@ app.put('/sitelist/:id', function (req, res) {
     var id = req.params.id;
     var del = {};
     var setUpdate = {};
-    for (item in req.body){
-        if (item!='_id')
+    for (item in req.body) {
+        if (item != '_id')
             setUpdate[item] = req.body[item];
-    };
+    }
+    ;
     db.sites.findOne({_id: mongojs.ObjectID(id)}, function (err, doc) {
-        for (item in doc){
-            if (!(item in req.body)){
+        for (item in doc) {
+            if (!(item in req.body)) {
                 var del = {};
                 del[item] = 1;
-                console.log("删除内容: ",del);
+                console.log("删除内容: ", del);
                 db.sites.findAndModify({
-                    query: {_id :mongojs.ObjectId(id)},
+                    query: {_id: mongojs.ObjectId(id)},
                     update: {$unset: del},
                     new: true
-                },function (err,doc) {});
+                }, function (err, doc) {
+                });
             }
         }
     });
-    console.log('更新内容: ',setUpdate);
+    console.log('更新内容: ', setUpdate);
     db.sites.findAndModify({
         query: {_id: mongojs.ObjectID(id)},
         update: {$set: setUpdate},
@@ -100,26 +102,25 @@ app.put('/sitelist/:id', function (req, res) {
 });
 
 app.get('/message', function (req, res) {
-    console.log('get msg');
+    //console.log('get msg');
     dbmsg.message.find(function (err, doc) {
-        if (!err){
+        if (!err) {
             res.json(doc);
         }
     })
 });
 
-app.post('/message',function (req, res) {
+app.post('/message', function (req, res) {
     var newMsg = {
         name: req.body.name,
         msg: req.body.msg,
         time: Date()
     };
-    console.log('new message got:'+newMsg.msg);
+    console.log('new message got:' + newMsg.msg);
     dbmsg.message.insert(newMsg, function (err, doc) {
         res.json(doc);
     });
 });
-
 
 
 app.listen(3000);
