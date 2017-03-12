@@ -4,6 +4,11 @@ myApp.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.isEditing = false;
     $scope.isInfo = false;
     $scope.detailEditing = {}
+    $scope.translate={
+        name: '站名',
+        latitude: '纬度',
+        longitude: '经度'
+    };
 
     var refresh = function () {
         $http.get('/sitelist').then(function (response) {

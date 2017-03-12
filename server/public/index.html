@@ -78,8 +78,7 @@
         </tr>
         <tr  ng-repeat="(attribute,value) in site" ng-show="(attribute=='_id')?0:1"
             ng-init="detailEditing[attribute]=false">
-            <!-- <td>{{translate[attribute]?translate[attribute]:attribute}}</td> -->
-            <td nowrap="" overflow:hidden >{{attribute}}</td>
+            <td nowrap="" overflow:hidden >{{translate[attribute]?translate[attribute]:attribute}}</td>
             <td ng-show="!detailEditing[attribute]">{{value}}</td>
             <td ng-show="detailEditing[attribute]"><input class="form-control" ng-model="site[attribute]"></td>
             <td>
