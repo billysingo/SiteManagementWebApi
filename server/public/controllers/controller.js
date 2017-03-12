@@ -97,7 +97,7 @@ myApp.controller('AppCtrl', ['$scope', '$http', function ($scope, $http) {
 
 }]);
 
-myApp.controller('MessageCtrl',['$scope', '$http',function ($scope, $http) {
+myApp.controller('MessageCtrl',['$scope', '$http', '$sce',function ($scope, $http, $sce) {
 
     var refresh = function () {
         $http.get('/message').then(function (response) {
@@ -120,5 +120,9 @@ myApp.controller('MessageCtrl',['$scope', '$http',function ($scope, $http) {
        
     };
 
-
+    $scope.replaceText = function (str){
+    var reg=new RegExp("\n","g");    
+    str = str.replace(reg,"<br>");
+    return $sce.trustAsHtml(str);
+    }
 }]);

@@ -33,7 +33,7 @@
             <td><input class="form-control" ng-model="site.latitude" required=""></td>
             <td><input class="form-control" ng-model="site.longitude" required=""></td>
             <td>
-                <button ng-show="!isEditing" class="btn btn-primary" ng-click="addSite()">快速添加站点</button>
+                <button ng-show="!isEditing" class="btn btn-primary" ng-click="addSite()">添加</button>
                 <button ng-show="isEditing" class="btn btn-info" ng-click="update()">更新</button>
                 <button ng-show="isEditing" class="btn btn-info" ng-click="deselect()">取消</button>
 
@@ -44,7 +44,7 @@
             <td ng-bind="site.latitude"></td>
             <td ng-bind="site.longitude"></td>
             <td>
-                <button class="btn btn-warning" ng-click="info(site._id)">编辑详细</button>
+                <button class="btn btn-warning" ng-click="info(site._id)">编辑</button>
                 <button class="btn btn-danger" ng-click="remove(site._id)">删除</button>
                 <!-- <button class="btn btn-warning" ng-click="edit(site._id)">编辑</button> -->
             </td>
@@ -65,7 +65,7 @@
             <tr>
                 <td><input class="form-control" ng-model="newAttrName" placeholder="不得纯数字或重复" required=""></td>
                 <td><input class="form-control" ng-model="newAttrValue" required=""></td>
-                <td><button class="btn btn-primary" ng-click="addNewAttribute()">新增参数</button></td>
+                <td><button class="btn btn-primary" ng-click="addNewAttribute()">新增</button></td>
             </tr>
             <tr ng-repeat="(attribute,value) in site" ng-show="(attribute=='_id')?0:1" ng-init="detailEditing[attribute]=false">
                 <!-- <td>{{translate[attribute]?translate[attribute]:attribute}}</td> -->
@@ -73,16 +73,16 @@
                 <td ng-show="!detailEditing[attribute]">{{value}}</td>
                 <td ng-show="detailEditing[attribute]"><input class="form-control" ng-model="site[attribute]"></td>
                 <td>
-                    <button class="btn btn-warning" ng-click="detailEditing[attribute]=!detailEditing[attribute]" ng-bind="detailEditing[attribute]?'完成 ':'修改值'"></button>
-                    <button class="btn btn-danger" ng-click="delAttribute(attribute)">删除参数</button>
+                    <button class="btn btn-warning" ng-click="detailEditing[attribute]=!detailEditing[attribute]" ng-bind="detailEditing[attribute]?'完成 ':'修改'"></button>
+                    <button class="btn btn-danger" ng-click="delAttribute(attribute)">删除</button>
                 </td>
             </tr>
             <tr>
                 <td></td>
                 <td></td>
                 <td>
-                    <button class="btn btn-primary" ng-click="returnToHome()">返回主页</button>
-                    <button class="btn btn-success" ng-click="update()">确认更新</button>
+                    <button class="btn btn-primary" ng-click="returnToHome()">返回</button>
+                    <button class="btn btn-success" ng-click="update()">确认</button>
                 </td>
             </tr>
         </tbody>
@@ -94,7 +94,7 @@
     <div  ng-repeat="msg in messages | orderBy: '-time'">
         <h4><u>{{msg.name}}</u><small>    {{msg.time}}</small></h4>
         <blockquote>
-            <p ng-bind="msg.msg"></p>
+            <p ng-bind-html="replaceText(msg.msg)"></p>
         </blockquote>
     </div>
     <br>
