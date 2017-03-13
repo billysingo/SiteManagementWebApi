@@ -128,12 +128,12 @@ myApp.controller('MessageCtrl', ['$scope', '$http', '$sce', function ($scope, $h
     $scope.addMsg = function () {
         if ($scope.name != "" && $scope.msg != "" && $scope.name && $scope.msg) {
             $http.post('/message', {name: $scope.name, msg: $scope.msg}).then(function (response) {
-                $scope.name = '';
+                //$scope.name = '';
                 $scope.msg = '';
             });
             refresh();
         } else {
-            alert('填写名字')
+            alert('填写名字和留言');
         }
 
     };

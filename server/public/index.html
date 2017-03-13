@@ -104,9 +104,9 @@
     <div ng-show="!isInfo" >
     <div ><h3>留言板</h3></div>
     <br>
-    <div ng-repeat="msg in messages | orderBy: '-time'">
-        <h4><u>{{msg.name}}</u>
-            <small> {{msg.time}}</small>
+    <div ng-repeat="msg in messages | orderBy: '-_id'">
+        <h4><u ng-bind="msg.name"></u>
+            <small ng-bind="msg.time"></small>
         </h4>
         <blockquote>
             <p ng-bind-html="replaceText(msg.msg)"></p>
